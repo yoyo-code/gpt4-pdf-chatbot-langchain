@@ -25,7 +25,8 @@ export default function Home() {
   }>({
     messages: [
       {
-        message: 'Hi, what would you like to learn about this document?',
+        message:
+          'Hola, preguntame cualquier cosa relacionada a las patologias GES',
         type: 'apiMessage',
       },
     ],
@@ -41,6 +42,13 @@ export default function Home() {
     textAreaRef.current?.focus();
   }, []);
 
+  useEffect(() => {
+    if (messageListRef.current) {
+      const scrollHeight = messageListRef.current.scrollHeight;
+      messageListRef.current.scrollTo(0, scrollHeight);
+    }
+  }, [messages]);
+
   //handle form submission
   async function handleSubmit(e: any) {
     e.preventDefault();
@@ -48,7 +56,7 @@ export default function Home() {
     setError(null);
 
     if (!query) {
-      alert('Please input a question');
+      alert('Ingrese una pregunta porfavor');
       return;
     }
 
@@ -80,7 +88,6 @@ export default function Home() {
         }),
       });
       const data = await response.json();
-      console.log('data', data);
 
       if (data.error) {
         setError(data.error);
@@ -98,12 +105,8 @@ export default function Home() {
           history: [...state.history, [question, data.text]],
         }));
       }
-      console.log('messageState', messageState);
 
       setLoading(false);
-
-      //scroll to bottom
-      messageListRef.current?.scrollTo(0, messageListRef.current.scrollHeight);
     } catch (error) {
       setLoading(false);
       setError('An error occurred while fetching the data. Please try again.');
@@ -125,7 +128,7 @@ export default function Home() {
       <Layout>
         <div className="mx-auto flex flex-col gap-4">
           <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter text-center">
-            Chat With Your Docs
+            Asistente IA para patologias GES
           </h1>
           <main className={styles.main}>
             <div className={styles.cloud}>
@@ -223,8 +226,8 @@ export default function Home() {
                     name="userInput"
                     placeholder={
                       loading
-                        ? 'Waiting for response...'
-                        : 'What is this legal case about?'
+                        ? 'Esperando por una respuesta...'
+                        : '¿Que pasa en caso de que no se cumpla una garantia GES?'
                     }
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
@@ -262,7 +265,7 @@ export default function Home() {
         </div>
         <footer className="m-auto p-4">
           <a href="https://twitter.com/mayowaoshin">
-            Powered by LangChainAI. Demo built by Mayo (Twitter: @mayowaoshin).
+            Asistente de Chat para patologias GES - Hospital San José 2023
           </a>
         </footer>
       </Layout>
